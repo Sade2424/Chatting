@@ -6,18 +6,28 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfilView: View {
+    @StateObject var ViewModel = ProfileViewModel()
+    let user: User
     var body: some View {
         VStack{
             //header
             VStack {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .frame(width:80, height:80)
-                    .foregroundStyle(Color(.systemGray4))
+                PhotosPicker(selection: $ViewModel.selectedItem) {
+                    if let profileImage = ViewModel.profileImage {
+                        profileImage
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:80, height:80)
+                            .clipShape(Circle())
+                    }else {
+                        CircularProfileImageView(user: user, size: .xLarge)
+                    }
+                }
                 
-                Text("Pixel")
+                Text(user.fullname)
                     .font(.title)
                     .fontWeight(.semibold)
             }
@@ -27,10 +37,10 @@ struct ProfilView: View {
                 Section {
                     ForEach(SettingsOptionsViewModel.allCases) { option in
                         HStack {
-                            Image(systemName: "bell.circle.fill")
+                            Image(systemName: option.imageName)
                                 .resizable()
                                 .frame(width: 24, height: 24)
-                                .foregroundStyle(Color(.systemPurple))
+                                .foregroundStyle(option.imageBackgroundColor)
                             
                             Text(option.title)
                                 .font(.subheadline)
@@ -55,6 +65,6 @@ struct ProfilView: View {
 
 struct ProfilView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfilView()
+        ProfilView(user: User.MOCK_USER)
     }
 }
