@@ -10,59 +10,59 @@ import SwiftUI
 struct InboxView: View {
     @State private var showNewMessageView = false
     @State private var user = User.MOCK_USER
+    
     var body: some View {
         NavigationStack {
-            ScrollView {
+            List {
+                
+                // Section "Active now"
                 ActiveNowView()
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
                 
-                List {
-                    ForEach(0...10, id: \.self) {message in
-                        InboxRowView()
-                        
-                    }
+                // Messages
+                ForEach(0...10, id: \.self) { message in
+                    InboxRowView()
                 }
-                .listStyle(PlainListStyle())
-                .frame(height: UIScreen.main.bounds.height - 120)
             }
-            .navigationDestination(for: User.self, destination: { user in
+            .listStyle(.plain)
+            
+            .navigationDestination(for: User.self) { user in
                 ProfilView(user: user)
-            })
-            .fullScreenCover(isPresented: $showNewMessageView, content: {
-               NewMessageView()
-                
-            })
+            }
+            
+            .fullScreenCover(isPresented: $showNewMessageView) {
+                NewMessageView()
+            }
+            
             .navigationTitle("Chats")
+            
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    HStack {
-                        NavigationLink(value: user) {
-                            CircularProfileImageView(user:user, size: .xSmall)
-                            
-                        }
-                  
-                   
+                    NavigationLink(value: user) {
+                        CircularProfileImageView(user: user, size: .xSmall)
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showNewMessageView.toggle()
-                    }label: {
+                    } label: {
                         Image(systemName: "square.and.pencil.circle.fill")
                             .resizable()
                             .frame(width: 32, height: 32)
                             .foregroundStyle(.black, Color(.systemGray5))
                     }
-                    }
                 }
             }
         }
     }
+}
 
-        struct InboxView_Previews: PreviewProvider {
-            static var previews: some View {
-                InboxView()
-            }
-        }
+struct InboxView_Previews: PreviewProvider {
+    static var previews: some View {
+        InboxView()
+    }
+}
 
-    
+// had to change the old version since putting a List in a Scrollview causes problems. To make it short, a the list does the scrolling and the Scrollview also does scrolling. Which implies that there are two scrolling --> some small bugs when you scroll. To resolve this issues i removed the Scrollview and put it in a List only. And voila! no bugs!

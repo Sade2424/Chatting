@@ -21,7 +21,7 @@ struct InboxRowView: View {
                     .font(.subheadline)
                     .foregroundStyle(Color(.gray))
                     .lineLimit(2)
-                    .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .leading) // remplace UIScreen (too old like usual)
             }
             
             HStack {
@@ -32,9 +32,7 @@ struct InboxRowView: View {
             .font(.footnote)
             .foregroundStyle(Color(.gray))
         }
-      
         .frame(height: 72)
-
     }
 }
 
