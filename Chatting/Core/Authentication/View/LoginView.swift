@@ -123,5 +123,3 @@ struct LoginView: View {
             LoginView()
         }
     }
-
-

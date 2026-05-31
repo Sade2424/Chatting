@@ -9,7 +9,13 @@ import SwiftUI
 
 struct InboxView: View {
     @State private var showNewMessageView = false
-    @State private var user = User.MOCK_USER
+    @StateObject var viewModel = InboxViewModel()
+    @State private var selectedUser: User?
+    @State private var showChat = false
+    
+    private var user: User? {
+        return viewModel.currentUser
+    }
     
     var body: some View {
         NavigationStack {
@@ -26,13 +32,22 @@ struct InboxView: View {
                 }
             }
             .listStyle(.plain)
+            .onChange(of: selectedUser) { _, newValue in
+                showChat = newValue != nil
+            }
             
             .navigationDestination(for: User.self) { user in
                 ProfilView(user: user)
             }
+            .navigationDestination(isPresented: $showChat, destination: {
+                if let user = selectedUser {
+                    ChatView(user: user)
+                }
+            })
+            
             
             .fullScreenCover(isPresented: $showNewMessageView) {
-                NewMessageView()
+                NewMessageView(selectedUser: $selectedUser)
             }
             
             .navigationTitle("Chats")
