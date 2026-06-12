@@ -28,16 +28,34 @@ struct InboxView: View {
                 
                 // Messages
                 ForEach(viewModel.recentMessages) { message in
-                    InboxRowView(message: message)
+                    ZStack {
+                        NavigationLink(value: message) {
+                            EmptyView()
+                        }.opacity(0.0) // otherwise there were two arrows on the box, so i made that the opacity is 0 so it wouldn't show
+                        
+                        InboxRowView(message: message)
+                        
+                    }
                 }
             }
+            
             .listStyle(.plain)
             .onChange(of: selectedUser) { _, newValue in
                 showChat = newValue != nil
             }
+            .navigationDestination(for: Message.self, destination: { message in
+                if let user = message.user {
+                    ChatView(user: user)
+                }
+            })
             
-            .navigationDestination(for: User.self) { user in
-                ProfilView(user: user)
+            .navigationDestination(for: Route.self) { route in
+                switch route{
+                case .profile(let user):
+                    ProfilView(user: user)
+                case .chatView(let user):
+                    ChatView(user: user)
+                }
             }
             .navigationDestination(isPresented: $showChat, destination: {
                 if let user = selectedUser {
@@ -54,11 +72,12 @@ struct InboxView: View {
             
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink(value: user) {
-                        CircularProfileImageView(user: user, size: .xSmall)
+                    if let user {
+                        NavigationLink(value: Route.profile(user)) {
+                            CircularProfileImageView(user: user, size: .xSmall)
+                        }
                     }
                 }
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showNewMessageView.toggle()
@@ -75,10 +94,12 @@ struct InboxView: View {
     }
 }
 
-struct InboxView_Previews: PreviewProvider {
-    static var previews: some View {
-        InboxView()
+    
+    struct InboxView_Previews: PreviewProvider {
+        static var previews: some View {
+            InboxView()
+        }
     }
-}
 
 // had to change the old version since putting a List in a Scrollview causes problems. To make it short, a the list does the scrolling and the Scrollview also does scrolling. Which implies that there are two scrolling --> some small bugs when you scroll. To resolve this issues i removed the Scrollview and put it in a List only. And voila! no bugs!
+// Friendly reminder: don't put a ToolbarItem in a ToolbarItem. It gets confused (who wouldn't get confused by it btw). So yes again, don't do stupid things and think a bit will you.

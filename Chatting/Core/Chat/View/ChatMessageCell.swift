@@ -28,7 +28,7 @@ struct ChatMessageCell: View {
                     .frame(maxWidth: 260, alignment: .trailing) // remplace UIScreen /1.5 --> version that doesn't work anymore
                 
             } else {
-                HStack(alignment: .bottom, spacing: 0) {
+                HStack(alignment: .bottom, spacing: 8) {
                     CircularProfileImageView(user: User.MOCK_USER, size: .xxSmall)
                     
                     Text(message.messageText)
@@ -37,7 +37,7 @@ struct ChatMessageCell: View {
                         .background(Color(.systemGray5))
                         .foregroundStyle(Color.black)
                         .clipShape(ChatBubble(isFromCurrentUser: isFromCurrentUser))
-                        .frame(maxWidth: 220, alignment: .trailing) // remplace UIScreen /1.75
+                        .frame(maxWidth: 220, alignment: .leading) // remplace UIScreen /1.75
                     
                     Spacer()
                 }
