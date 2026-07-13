@@ -19,9 +19,15 @@ class UserService {
     func fetchCurrentUser() async throws {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let snapshot = try await Firestore.firestore().collection("users").document(uid).getDocument()
+
+        guard snapshot.exists else {
+            print("DEBUG: No Firestore user document found for uid \(uid)")
+            return
+        }
+
         let user = try snapshot.data(as: User.self)
         self.currentUser = user
-        
+        print("DEBUG: Loaded current user \(user.fullname)")
     }
     
     static func fetchAllUsers(limit: Int? = nil) async throws -> [User] {
