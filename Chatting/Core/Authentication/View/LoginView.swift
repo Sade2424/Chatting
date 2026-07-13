@@ -66,32 +66,25 @@ struct LoginView: View {
                 }
                 .padding(.vertical)
                 
-                //facebook login
+                //Google login
                 
-                HStack {
-                    Rectangle()
-                        .frame(height: 0.5)
-                    Text("OR")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                    Rectangle()
-                        .frame(height: 0.5)
+                Button {
+                    Task {
+                        await viewModel.signInWithGoogle()
+                    }
+                } label: {
+                    HStack {
+                        Image("google-logo")
+                            .resizable()
+                            .frame(width: 20, height: 20)
                         
+                        Text("Continue with Google")
+                            .font(.footnote)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color(.systemBlue))
+                    }
+                    .padding(.top, 8)
                 }
-                .foregroundStyle(.gray)
-                .padding(.horizontal, 40)
-                
-                HStack {
-                    Image("facebook-logo")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                    
-                    Text ("Continue with Facebook")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color(.systemBlue))
-                }
-                .padding(.top,8)
                 
                 Spacer()
                 

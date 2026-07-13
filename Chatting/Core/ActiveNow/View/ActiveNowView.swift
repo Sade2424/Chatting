@@ -33,6 +33,7 @@ struct ActiveNowView: View {
                             Text (user.firstName)
                                 .font(.footnote)
                                 .foregroundStyle(Color(.gray))
+                            
                         }
                     }
                 }
