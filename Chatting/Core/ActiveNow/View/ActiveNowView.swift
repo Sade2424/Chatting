@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ActiveNowView: View {
     @StateObject var viewModel = ActiveNowViewModel()
-    
+    @EnvironmentObject var themeManager: ThemeManager
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false){
             HStack(spacing:32){
@@ -17,7 +17,7 @@ struct ActiveNowView: View {
                     NavigationLink(value: Route.chatView(user)) {
                         VStack {
                             ZStack(alignment: .bottomTrailing) {
-                                CircularProfileImageView(user: user, size: .medium)
+                                CircularProfileImageView(user: user, size: .medium, color: themeManager.selectedColor)
                                 
                                 ZStack {
                                     Circle()
@@ -33,7 +33,6 @@ struct ActiveNowView: View {
                             Text (user.firstName)
                                 .font(.footnote)
                                 .foregroundStyle(Color(.gray))
-                            
                         }
                     }
                 }

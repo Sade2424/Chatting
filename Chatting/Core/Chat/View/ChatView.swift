@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject var viewModel: ChatViewModel
+    @EnvironmentObject var themeManager: ThemeManager
     let user: User
     
     init(user: User) {
@@ -20,7 +21,7 @@ struct ChatView: View {
             ScrollView{
                 // header
                 VStack {
-                    CircularProfileImageView(user: user, size: .xLarge)
+                    CircularProfileImageView(user: user, size: .xLarge, color: themeManager.selectedColor)
                     
                     VStack (spacing:4){
                         Text(user.fullname)

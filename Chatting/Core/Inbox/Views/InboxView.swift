@@ -8,16 +8,19 @@
 import SwiftUI
 
 struct InboxView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var showNewMessageView = false
     @StateObject var viewModel = InboxViewModel()
     @State private var selectedUser: User?
     @State private var showChat = false
+   
     
     private var user: User? {
         return viewModel.currentUser
     }
     
     var body: some View {
+        
         NavigationStack {
             List {
                 
@@ -32,7 +35,7 @@ struct InboxView: View {
                         NavigationLink(value: message) {
                             EmptyView()
                         }.opacity(0.0) // otherwise there were two arrows on the box, so i made that the opacity is 0 so it wouldn't show
-                        
+                    
                         InboxRowView(message: message)
                         
                     }
@@ -74,7 +77,7 @@ struct InboxView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     if let user {
                         NavigationLink(value: Route.profile(user)) {
-                            CircularProfileImageView(user: user, size: .xSmall)
+                            CircularProfileImageView(user: user, size: .xSmall, color: themeManager.selectedColor )
                         }
                     }
                 }

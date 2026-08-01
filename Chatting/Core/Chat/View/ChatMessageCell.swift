@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ChatMessageCell: View {
+    @EnvironmentObject var themeManager: ThemeManager
     let message: Message
     
     private var isFromCurrentUser: Bool {
@@ -29,7 +30,7 @@ struct ChatMessageCell: View {
                 
             } else {
                 HStack(alignment: .bottom, spacing: 8) {
-                    CircularProfileImageView(user: User.MOCK_USER, size: .xxSmall)
+                    CircularProfileImageView(user: User.MOCK_USER, size: .xxSmall, color: themeManager.selectedColor)
                     
                     Text(message.messageText)
                         .font(.subheadline)
