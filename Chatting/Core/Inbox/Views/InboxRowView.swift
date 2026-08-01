@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct InboxRowView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     let message: Message
     var body: some View {
+        
         HStack(alignment: .top, spacing: 12) {
-            CircularProfileImageView(user: message.user, size: .medium)
+            CircularProfileImageView(user: message.user, size: .medium, color: themeManager.selectedColor)
             
             VStack(alignment: .leading, spacing: 4){
                 Text(message.user?.fullname ?? "")

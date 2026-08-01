@@ -7,37 +7,53 @@
 
 import SwiftUI
 
-struct NewMessageView: View{
+struct NewMessageView: View {
+    @EnvironmentObject var themeManager: ThemeManager
     @State private var searchText = ""
     @StateObject private var viewModel = NewMessageViewModel()
     @Binding var selectedUser: User?
     @Environment(\.dismiss) var dismiss
+
+    private var filteredUsers: [User] {
+        if searchText.isEmpty {
+            return viewModel.users
+        } else {
+            return viewModel.users.filter {
+                $0.fullname.localizedCaseInsensitiveContains(searchText) // localizedCaseInsensitiveContains: is used so Sade = sade -> doesnt care about capital letters
+            }
+        }
+    }
     var body: some View {
         NavigationStack {
-            ScrollView{
+            ScrollView {
                 TextField("To: ", text: $searchText)
-                    .frame(height:44)
+                    .frame(height: 44)
                     .padding(.leading)
-                    .background(Color(.systemGroupedBackground))
-                
+                    .background(themeManager.selectedColor)
+
                 Text("CONTACTS")
                     .foregroundStyle(Color(.gray))
                     .font(.footnote)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-            
-                ForEach(viewModel.users) { user in
+
+                ForEach(filteredUsers) { user in
                     VStack {
                         HStack {
-                            CircularProfileImageView(user: user, size: .small)
+                            CircularProfileImageView(
+                                user: user,
+                                size: .small,
+                                color: themeManager.selectedColor
+                            )
+
                             Text(user.fullname)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
-                            
+
                             Spacer()
                         }
                         .padding(.leading)
-                        
+
                         Divider()
                             .padding(.leading, 40)
                     }
@@ -45,8 +61,6 @@ struct NewMessageView: View{
                         selectedUser = user
                         dismiss()
                     }
-                    
-                    
                 }
             }
             .navigationTitle("New Message")
@@ -55,19 +69,10 @@ struct NewMessageView: View{
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
-                        
                     }
                     .foregroundStyle(Color(.black))
                 }
             }
-        }
-    }
-}
-
-struct NewMessageView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            NewMessageView(selectedUser: .constant (User.MOCK_USER))
         }
     }
 }

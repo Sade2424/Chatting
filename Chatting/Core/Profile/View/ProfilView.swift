@@ -9,63 +9,89 @@ import SwiftUI
 import PhotosUI
 
 struct ProfilView: View {
+    
     @StateObject var ViewModel = ProfileViewModel()
+    @EnvironmentObject var themeManager: ThemeManager
+    
     let user: User
+    
     var body: some View {
-        VStack{
-            //header
+        ZStack {
+            themeManager.selectedColor
+                .ignoresSafeArea()
+            
             VStack {
-                PhotosPicker(selection: $ViewModel.selectedItem) {
-                    if let profileImage = ViewModel.profileImage {
-                        profileImage
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width:80, height:80)
-                            .clipShape(Circle())
-                    }else {
-                        CircularProfileImageView(user: user, size: .xLarge)
+                // header
+                VStack {
+                    PhotosPicker(selection: $ViewModel.selectedItem) {
+                        if let profileImage = ViewModel.profileImage {
+                            profileImage
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .clipShape(Circle())
+                        } else {
+                            CircularProfileImageView(user: user, size: .xLarge, color: themeManager.selectedColor)
+                        }
                     }
+                    
+                    Text(user.fullname)
+                        .font(.title)
+                        .fontWeight(.semibold)
                 }
                 
-                Text(user.fullname)
-                    .font(.title)
-                    .fontWeight(.semibold)
-            }
-            //list
-            
-            List {
-                Section {
-                    ForEach(SettingsOptionsViewModel.allCases) { option in
-                        HStack {
-                            Image(systemName: option.imageName)
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .foregroundStyle(option.imageBackgroundColor)
+                // list
+                List {
+                    Section {
+                        ForEach(SettingsOptionsViewModel.allCases) { option in
                             
-                            Text(option.title)
-                                .font(.subheadline)
+                            if option == .interfaceColor {
+                                NavigationLink {
+                                    InterfaceColorView()
+                                } label: {
+                                    HStack {
+                                        Image(systemName: option.imageName)
+                                            .resizable()
+                                            .frame(width: 24, height: 24)
+                                            .foregroundStyle(themeManager.selectedColor)
+                                        
+                                        Text(option.title)
+                                            .font(.subheadline)
+                                    }
+                                }
+                            } else {
+                                HStack {
+                                    Image(systemName: option.imageName)
+                                        .resizable()
+                                        .frame(width: 24, height: 24)
+                                        .foregroundStyle(option.imageBackgroundColor)
+                                    
+                                    Text(option.title)
+                                        .font(.subheadline)
+                                }
+                            }
+                        }                }
+                    
+                    Section {
+                        Button("Logout") {
+                            AuthService.shared.signOut()
+                        }
+                        
+                        Button("Delete Account") {
+                            
                         }
                         
                     }
-                    
+                    .foregroundStyle(Color(.red))
                 }
-                Section {
-                    Button("Logout") {
-                        AuthService.shared.signOut()
-                    }
-                    Button("Delete Account"){
-                        
-                    }
-                    
-                }
-                .foregroundStyle(Color(.red))
             }
         }
     }
-}
-
-struct ProfilView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfilView(user: User.MOCK_USER)
+    
+    struct ProfilView_Previews: PreviewProvider {
+        static var previews: some View {
+            ProfilView(user: User.MOCK_USER)
+                .environmentObject(ThemeManager())
+        }
     }
 }

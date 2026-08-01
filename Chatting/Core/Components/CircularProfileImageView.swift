@@ -30,24 +30,26 @@ enum  ProfileImageSize{
 struct CircularProfileImageView: View {
     let user: User?
     let size: ProfileImageSize
-    
+    let color: Color
+
     var body: some View {
-        if let imageUrl = user?.profileImageUrl{
+        if let imageUrl = user?.profileImageUrl {
             Image(imageUrl)
                 .resizable()
                 .scaledToFill()
                 .frame(width: size.dimension, height: size.dimension)
                 .clipShape(Circle())
-        }else{
-            Image(systemName:"person.circle.fill")
+        } else {
+            Image(systemName: "person.circle.fill")
                 .resizable()
-                .foregroundStyle(Color(.systemGray4))
+                .foregroundStyle(color)
                 .frame(width: size.dimension, height: size.dimension)
-            
         }
     }
 }
 
 #Preview {
-    CircularProfileImageView(user: User.MOCK_USER, size: .large)
+    let themeManager = ThemeManager()
+    
+    CircularProfileImageView(user: User.MOCK_USER, size: .large, color: themeManager.selectedColor)
 }
