@@ -26,10 +26,16 @@ struct NewMessageView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                TextField("To: ", text: $searchText)
-                    .frame(height: 44)
-                    .padding(.leading)
-                    .background(themeManager.selectedColor)
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(.gray)
+
+                    TextField("Search...", text: $searchText)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding(.horizontal)
 
                 Text("CONTACTS")
                     .foregroundStyle(Color(.gray))

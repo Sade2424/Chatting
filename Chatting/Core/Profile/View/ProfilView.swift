@@ -13,8 +13,23 @@ struct ProfilView: View {
     @StateObject var ViewModel = ProfileViewModel()
     @EnvironmentObject var themeManager: ThemeManager
     
+    
+    
     let user: User
     
+    @State private var selectedAvatar: String
+    
+    init(user: User) {
+
+            self.user = user
+
+            _selectedAvatar = State(
+
+                initialValue: user.profileImageName ?? "defaultAvatar"
+
+            )
+
+        }
     var body: some View {
         ZStack {
             themeManager.selectedColor
@@ -23,16 +38,14 @@ struct ProfilView: View {
             VStack {
                 // header
                 VStack {
-                    PhotosPicker(selection: $ViewModel.selectedItem) {
-                        if let profileImage = ViewModel.profileImage {
-                            profileImage
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .clipShape(Circle())
-                        } else {
-                            CircularProfileImageView(user: user, size: .xLarge, color: themeManager.selectedColor)
-                        }
+                    NavigationLink {
+                        AvatarSelectionView(selectedAvatar: $selectedAvatar)
+                    } label: {
+                        Image(selectedAvatar)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .clipShape(Circle())
                     }
                     
                     Text(user.fullname)

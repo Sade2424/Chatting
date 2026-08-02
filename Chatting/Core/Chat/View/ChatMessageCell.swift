@@ -30,7 +30,7 @@ struct ChatMessageCell: View {
                 
             } else {
                 HStack(alignment: .bottom, spacing: 8) {
-                    CircularProfileImageView(user: User.MOCK_USER, size: .xxSmall, color: themeManager.selectedColor)
+                    CircularProfileImageView(user: message.user, size: .xxSmall, color: themeManager.selectedColor)
                     
                     Text(message.messageText)
                         .font(.subheadline)
@@ -47,6 +47,7 @@ struct ChatMessageCell: View {
         .padding(.horizontal, 8)
     }
 }
+
 // #Preview {
     //ChatMessageCell(isFromCurrentUser: false)
 //}
